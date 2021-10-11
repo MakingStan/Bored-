@@ -1,2 +1,2 @@
-# Example
-An example greeter plugin
+# Bored?
+A plug-in to use when your bored of RuneScape!
