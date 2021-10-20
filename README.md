@@ -5,6 +5,7 @@ note; you have to be logged in to use this plugin.
 
 Thanks to the osrs wiki for letting me use there content.
 Link: https://oldschool.runescape.wiki/
+
 Discord: https://discord.com/invite/HWhxYsP
 
 
