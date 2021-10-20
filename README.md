@@ -41,4 +41,3 @@ When you have your task completed you can click the completed button and then yo
 
 When you have completed a task you can generate a new one!
 
-
