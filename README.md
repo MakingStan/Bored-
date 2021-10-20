@@ -29,6 +29,7 @@ instagram: https://www.instagram.com/tompan/
 
 
 **How to use**
+
 When downloading the plugin you will see a little button with a bandos head on it. Click it.
 
 Then you will see a menu, here you can check the checkboxes that you feel like doing. 
