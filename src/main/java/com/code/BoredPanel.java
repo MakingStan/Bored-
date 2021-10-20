@@ -378,6 +378,10 @@ public class BoredPanel extends PluginPanel {
                 skilT = new String[]{
                         "Mine " + (int) Math.floor(Math.random() * (200 - 120 + 1) + 120) + " pay dirt\nin the " + skillTask + "!"
                 };
+            } else if(skillTask.equals("Volcanic Mine")) {
+                skilT = new String[]{
+                        "Do " + (int) Math.floor(Math.random() * (20 - 10 + 1) + 10) + " " + skillTask + "rounds!"
+                };
             } else {
                 skilT = new String[]{
                         "Mine " + (int) Math.floor(Math.random() * (200 - 120 + 1) + 120) + " " + skillTask + "!"
