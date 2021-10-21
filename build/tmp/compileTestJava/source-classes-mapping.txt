@@ -1,2 +1,0 @@
-com/main/BoredGeneratorTest.java
- com.main.BoredGeneratorTest
