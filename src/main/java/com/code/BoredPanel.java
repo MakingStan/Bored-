@@ -31,7 +31,7 @@ public class BoredPanel extends PluginPanel {
     public static JTextArea datatext;
     private BufferedImage img = ImageUtil.loadImageResource(getClass(), "/pix.png");
     public JLabel Image = new JLabel(new ImageIcon(img));
-    private Random random = new Random();
+    private final Random random = new Random();
     private int index;
 
     @Inject
@@ -57,7 +57,7 @@ public class BoredPanel extends PluginPanel {
         pking = new JCheckBox("Pking");
         Anything = new JCheckBox("Everything");
         skilling = new JCheckBox("Skilling");
-        explain = new JTextArea("If this plugin does not work \nplease log in :).");
+        explain = new JTextArea("If this plugin does not work please log in :).");
         datatext = new JTextArea("Points: 0");
         completed = new JButton("Task completed? Click here!");
         wikiButton = new JButton("Wiki");
@@ -141,7 +141,6 @@ public class BoredPanel extends PluginPanel {
         add(button, BorderLayout.SOUTH);
     }
 
-
     private void setItUp() {
         completed.setVisible(true);
         Random random = new Random();
@@ -193,7 +192,7 @@ public class BoredPanel extends PluginPanel {
                 "Venging", "Nh", "Hybrid"
         };
         String[] Everything = {
-                "Corrupted Gauntlet", "Gauntlet", "Venging", "Nh", "Hybrid", "Agility", "Farming", "Herblore",
+                "Corrupted Gauntlet", "Gauntlet", "Venging", "Nh", "Hybrid", "Agility", "Herblore",
                 "Crafting", "Fishing",
                 "Fletching", "Construction", "Hunter", "Mining", "Prayer", "Runecrafting", "Firemaking", "Smithing",
                 "Thieving", "Woodcutting", "Bandos", "Armadyl", "Zamorak", "Saradomin",
@@ -201,7 +200,7 @@ public class BoredPanel extends PluginPanel {
                 "Callisto", "Vet'ion", "Barrows"
         };
         String[] everythingLow = {
-                "Venging", "Nh", "Hybrid", "Agility", "Farming", "Herblore",
+                "Venging", "Nh", "Hybrid", "Agility", "Herblore",
                 "Crafting", "Fishing",
                 "Fletching", "Construction", "Hunter", "Mining", "Prayer", "Runecrafting", "Firemaking", "Smithing",
                 "Thieving", "Woodcutting","Barrows", "Zulrah", "Crazy archaeologist", "Venenatis", "Deranged archaeologist",
@@ -211,7 +210,6 @@ public class BoredPanel extends PluginPanel {
         int randint;
 
             if (pvming.isSelected()&&!whatCb&& skilling.isSelected()&&pking.isSelected()) {
-
                 randint = random.nextInt(skillLowPvmPk.length);
                 Chekker = skillLowPvmPk[randint];
                 check();
@@ -295,6 +293,9 @@ public class BoredPanel extends PluginPanel {
             } else {
                 text.setText("Thats not valid.");
             }
+            if(!text.equals("Thats not valid.")) {
+                checkThatShit();
+            }
 
     }
 
@@ -316,8 +317,8 @@ public class BoredPanel extends PluginPanel {
                 "Get any unique from " + Chekker + "!",
                 "Kill " + Chekker + " in under \n6 minutes"
         };
+
         remove(wikiButton);
-        remove(Image);
     }
     private void checkThatShit() {
         index = random.nextInt(3);
@@ -352,7 +353,7 @@ public class BoredPanel extends PluginPanel {
             skillTask = SkillCheck.runecrafting();
             if (skillTask.equals("Ourania Altar")) {
                 skilT = new String[]{
-                        "Craft " + (int) Math.floor(Math.random() * (800 - 600 + 1) + 600) + " runes at the " + skillTask + "!"
+                        "Craft " + (int) Math.floor(Math.random() * (800 - 600 + 1) + 600) + " runes at the \n" + skillTask + "!"
                 };
             } else {
                 skilT = new String[]{
@@ -368,7 +369,7 @@ public class BoredPanel extends PluginPanel {
                 };
             } else {
                 skilT = new String[]{
-                        "Smith " + (int) Math.floor(Math.random() * (600 - 400 + 1) + 400) + " " + skillTask + "!"
+                        "Smith\n" + (int) Math.floor(Math.random() * (600 - 400 + 1) + 400) + " " + skillTask + "!"
                 };
             }
         } else if (Chekker.equals("Mining")) {
@@ -456,6 +457,7 @@ public class BoredPanel extends PluginPanel {
         }
     }
     private void skills() {
+        remove(Image);
         if (Chekker.equals("Agility")) {
 
             img = ImageUtil.loadImageResource(BoredPlugin.class, "/Agility.png");
