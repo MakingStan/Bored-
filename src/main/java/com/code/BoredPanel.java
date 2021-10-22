@@ -57,7 +57,7 @@ public class BoredPanel extends PluginPanel {
         pking = new JCheckBox("Pking");
         Anything = new JCheckBox("Everything");
         skilling = new JCheckBox("Skilling");
-        explain = new JTextArea("If this plugin does not work please log in :).");
+        explain = new JTextArea("If this plugin does not \nwork please log in :).");
         datatext = new JTextArea("Points: 0");
         completed = new JButton("Task completed? Click here!");
         wikiButton = new JButton("Wiki");
