@@ -341,7 +341,7 @@ public class BoredPanel extends PluginPanel {
             };
         } else if (Chekker.equals("Prayer")) {
             xp = client.getSkillExperience(Skill.PRAYER);
-            String[] altar = {"Gilded Alatar", "Chaos Altar"};
+            String[] altar = {"Gilded Altar", "Chaos Altar"};
             Random random = new Random();
             int randint = random.nextInt(2);
             skillTask = SkillCheck.prayer();
