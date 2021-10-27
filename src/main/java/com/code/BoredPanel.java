@@ -52,14 +52,14 @@ public class BoredPanel extends PluginPanel {
         setBackground(ColorScheme.DARK_GRAY_COLOR);
         setBorder(new EmptyBorder(8, 8, 8, 8));
 
-        prif = new JCheckBox("Prifddinas unlocked?");
+        prif = new JCheckBox("Prifddinas");
         pvming = new JCheckBox("Pvm");
         pking = new JCheckBox("Pking");
         Anything = new JCheckBox("Everything");
         skilling = new JCheckBox("Skilling");
         explain = new JTextArea("If this plugin does not \nwork please log in :).");
         datatext = new JTextArea("Points: 0");
-        completed = new JButton("Task completed? Click here!");
+        completed = new JButton("Completed");
         wikiButton = new JButton("Wiki");
         UserHandle.start();
 
