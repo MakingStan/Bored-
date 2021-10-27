@@ -63,6 +63,11 @@ public class  BoredPlugin extends Plugin
 				.build();
 		clientToolbar.addNavigation(navButton);
 	}
+	@Override
+	protected void shutDown() throws Exception
+	{
+		clientToolbar.removeNavigation(navButton);
+	}
 
 	@Provides
 	BoredConfig provideConfig(ConfigManager configManager)
