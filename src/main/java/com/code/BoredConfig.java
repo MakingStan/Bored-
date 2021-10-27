@@ -20,14 +20,6 @@ public interface BoredConfig extends Config {
 
 			)
 	default boolean CengineerC() { return false; }
-	@ConfigItem
-			(
-					position = 1,
-					keyName = "Autodetecting skills.",
-					name = "Autodetecting skills.",
-					description = "Autodetects your combat lvl and your skills in order to give you the most optimal task!"
-			)
-	default boolean AutoDetect() { return true; }
 
 
 }
