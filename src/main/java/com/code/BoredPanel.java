@@ -1,3 +1,28 @@
+
+/*
+ * Copyright (c) 2021, MakingStan
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ *
+ * 1. Redistributions of source code must retain the above copyright notice, this
+ *    list of conditions and the following disclaimer.
+ * 2. Redistributions in binary form must reproduce the above copyright notice,
+ *    this list of conditions and the following disclaimer in the documentation
+ *    and/or other materials provided with the distribution.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+ * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR
+ * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+ * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ */
 package com.code;
 
 import com.code.Sound.*;
@@ -21,14 +46,13 @@ import javax.swing.*;
 @Slf4j
 @Singleton
 public class BoredPanel extends PluginPanel {
-    public static int xp;
-    public static JButton button, wikiButton, completed;
-    public JTextField text;
-    public JCheckBox pking, Anything, pvming, skilling, prif;
-    public static String Chekker, url, skillTask;
-    static String[] pvmTasks, pvmg, skilT;
-    public JTextArea explain;
-    public static JTextArea datatext;
+    public static int xp,randint,randomNumber = 1; //starting with 1 because it else will autocomplete the task.
+    public static JButton generate, wikiButton, completed;
+    public static JTextField text;
+    public JCheckBox pking, everything, pvming, skilling, prif;
+    public static String Chekker, url, skillTask,skilT;
+    public static String[] pvmTasks, pvmg;
+    public static JTextArea explain,points;
     private BufferedImage img = ImageUtil.loadImageResource(getClass(), "/pix.png");
     public JLabel Image = new JLabel(new ImageIcon(img));
     private final Random random = new Random();
@@ -43,7 +67,6 @@ public class BoredPanel extends PluginPanel {
     @Inject
     SoundEngine soundEngine;
 
-
     @Inject
     CheckCombat checkCombat;
 
@@ -55,24 +78,24 @@ public class BoredPanel extends PluginPanel {
         prif = new JCheckBox("Prifddinas");
         pvming = new JCheckBox("Pvm");
         pking = new JCheckBox("Pking");
-        Anything = new JCheckBox("Everything");
+        everything = new JCheckBox("Everything");
         skilling = new JCheckBox("Skilling");
         explain = new JTextArea("If this plugin does not \nwork please log in :).");
-        datatext = new JTextArea("Points: 0");
+        points = new JTextArea("Points: 0");
         completed = new JButton("Completed");
         wikiButton = new JButton("Wiki");
         UserHandle.start();
 
 
-        text = new JTextField("BoredGenerator");
+        text = new JTextField("Skills Generator");
         prif.setBounds(0, 50, 100, 30);
         prif.setBackground(Color.gray);
         pvming.setBounds(10, 50, 100, 30);
         pvming.setBackground(Color.gray);
         skilling.setBounds(20, 50, 100, 30);
         skilling.setBackground(Color.gray);
-        Anything.setBounds(0, 80, 200, 30);
-        Anything.setBackground(Color.gray);
+        everything.setBounds(0, 80, 200, 30);
+        everything.setBackground(Color.gray);
         pking.setBounds(10, 80, 200, 30);
         pking.setBackground(Color.gray);
 
@@ -80,8 +103,8 @@ public class BoredPanel extends PluginPanel {
 
         wikiButton.setForeground(Color.orange);
 
-        datatext.setEditable(false);
-        datatext.setBackground(Color.gray);
+        points.setEditable(false);
+        points.setBackground(Color.gray);
 
         explain.setEditable(false);
         explain.setBackground(Color.gray);
@@ -90,33 +113,16 @@ public class BoredPanel extends PluginPanel {
         text.setFont(new Font("Verdana", Font.BOLD, 15));
         text.setBackground(Color.gray);
 
-        button = new JButton("Generate");
-        button.setForeground(Color.WHITE);
-        button.setBackground(ColorScheme.DARKER_GRAY_COLOR);
+        generate = new JButton("Generate");
+        generate.setForeground(Color.WHITE);
+        generate.setBackground(ColorScheme.DARKER_GRAY_COLOR);
 
         completed.setForeground(Color.GREEN);
         completed.setBackground(ColorScheme.DARKER_GRAY_COLOR);
         completed.setVisible(false);
 
-        button.addActionListener(e -> {
-            setItUp();
-        });
         completed.addActionListener(e -> {
-            if (config.CengineerC()) {
-                soundEngine.playClip(Sound.COM);
-            }
-            try {
-                UserHandle.handle();
-            } catch (IOException ioException) {
-                ioException.printStackTrace();
-            }
-            remove(Image);
-            text.setText("Completed!");
-            img = ImageUtil.loadImageResource(BoredPlugin.class, "/pix.png");
-            Image = new JLabel(new ImageIcon(img));
-            explain.setText("You have completed your task!\n" +
-                    "feel free to generate a new one!");
-            add(Image);
+            completed();
         });
         wikiButton.addActionListener(e -> {
             try {
@@ -125,11 +131,14 @@ public class BoredPanel extends PluginPanel {
                 e1.printStackTrace();
             }
         });
+        generate.addActionListener(e -> {
+            generateAction();
+        });
 
 
-        add(datatext);
+        add(points);
         add(prif);
-        add(Anything);
+        add(everything);
         add(pking);
         add(skilling);
         add(pvming);
@@ -138,9 +147,33 @@ public class BoredPanel extends PluginPanel {
         add(Image);
         add(completed);
         add(wikiButton);
-        add(button, BorderLayout.SOUTH);
+        add(generate, BorderLayout.SOUTH);
     }
-
+    public void generateAction()
+    {
+        generate.setText("Regenerate");
+        BoredPlugin.counter = 0;
+        setItUp();
+        BoredPlugin.preTxt = explain.getText();
+    }
+    public void completed()
+    {
+        if (config.CengineerC()) {
+            soundEngine.playClip(SoundEnum.COM);
+        }
+        try {
+            UserHandle.handle();
+        } catch (IOException ioException) {
+            ioException.printStackTrace();
+        }
+        remove(Image);
+        text.setText("Completed!");
+        img = ImageUtil.loadImageResource(BoredPlugin.class, "/pix.png");
+        Image = new JLabel(new ImageIcon(img));
+        explain.setText("You have completed your task!\n" +
+                "feel free to generate a new one!");
+        add(Image);
+    }
     private void setItUp() {
         completed.setVisible(true);
         Random random = new Random();
@@ -207,72 +240,87 @@ public class BoredPanel extends PluginPanel {
                 "Mole", "Bryophyta", "Obor", "King Black Dragon"
         };
 
-        int randint;
 
-            if (pvming.isSelected()&&!whatCb&& skilling.isSelected()&&pking.isSelected()) {
+            if (pvming.isSelected()&&!whatCb&& skilling.isSelected()&&pking.isSelected())
+            {
                 randint = random.nextInt(skillLowPvmPk.length);
                 Chekker = skillLowPvmPk[randint];
                 check();
                 text.setText(skillLowPvmPk[randint]);
-            } else if (skilling.isSelected()&&pking.isSelected()) {
+            }
+            else if (skilling.isSelected()&&pking.isSelected())
+            {
 
             randint = random.nextInt(skillPk.length);
             Chekker = skillPk[randint];
             check();
             text.setText(skillPk[randint]);
-            } else if (Anything.isSelected()&&!whatCb) {
+            } else if (everything.isSelected()&&!whatCb)
+            {
 
                 randint = random.nextInt(everythingLow.length);
                 Chekker = everythingLow[randint];
                 check();
                 text.setText(everythingLow[randint]);
             }
-            else if (pvming.isSelected()&&!whatCb&& skilling.isSelected()) {
+            else if (pvming.isSelected()&&!whatCb&& skilling.isSelected())
+            {
 
                 randint = random.nextInt(skillPvmLow.length);
                 Chekker = skillPvmLow[randint];
                 check();
                 text.setText(skillPvmLow[randint]);
             }
-            else if (pvming.isSelected() && skilling.isSelected() && prif.isSelected()) {
+            else if (pvming.isSelected() && skilling.isSelected() && prif.isSelected())
+            {
 
                 randint = random.nextInt(skillPvm.length);
                 Chekker = skillPvm[randint];
                 check();
                 text.setText(skillPvm[randint]);
-            } else if (Anything.isSelected() && prif.isSelected()) {
+            }
+            else if (everything.isSelected() && prif.isSelected())
+            {
 
                 randint = random.nextInt(Everything.length);
                 Chekker = Everything[randint];
                 check();
                 text.setText(Everything[randint]);
             }
-            else if (pvming.isSelected()&&!whatCb) {
+            else if (pvming.isSelected()&&!whatCb)
+            {
 
                 randint = random.nextInt(medium_lvl_pvm.length);
                 Chekker = medium_lvl_pvm[randint];
                 check();
                 text.setText(medium_lvl_pvm[randint]);
             }
-            else if (pvming.isSelected() && prif.isSelected()) {
+            else if (pvming.isSelected() && prif.isSelected())
+            {
 
                 randint = random.nextInt(high_lvl_pvm.length);
                 Chekker = high_lvl_pvm[randint];
                 check();
                 text.setText(high_lvl_pvm[randint]);
-            }  else if (pvming.isSelected() && skilling.isSelected()) {
+            }
+            else if (pvming.isSelected() && skilling.isSelected())
+            {
 
                 randint = (int) Math.floor(Math.random() * (skillPvm.length - 1 - 2 + 1) + 2);
                 Chekker = skillPvm[randint];
                 check();
                 text.setText(skillPvm[randint]);
-            } else if (pvming.isSelected()) {
+            }
+            else if (pvming.isSelected())
+            {
 
                 randint = (int) Math.floor(Math.random() * (high_lvl_pvm.length - 1 - 2 + 1) + 2);
                 Chekker = high_lvl_pvm[randint];
                 check();
                 text.setText(high_lvl_pvm[randint]);
-            } else if (skilling.isSelected()) {
+            }
+            else if (skilling.isSelected())
+            {
 
                 randint = random.nextInt(skilling_Activities.length);
                 Chekker = skilling_Activities[randint];
@@ -284,7 +332,7 @@ public class BoredPanel extends PluginPanel {
                 Chekker = pk[randint];
                 check();
                 text.setText(pk[randint]);
-            } else if (Anything.isSelected()) {
+            } else if (everything.isSelected()) {
 
                 randint = (int) Math.floor(Math.random() * (Everything.length - 1 - 2 + 1) + 2);
                 Chekker = Everything[randint];
@@ -299,19 +347,20 @@ public class BoredPanel extends PluginPanel {
 
     }
 
-    private void check() {
+    private void check()
+    {
 
 
         skillCheckTask();
 
-        pvmTasks = new String[]{
+        pvmTasks = new String[] {
                 "Kill " + Chekker + " " + (int) Math.floor(Math.random() * (10 - 5 + 1) + 5) + " times",
                 "Get any unique from \n" + Chekker + "!",
                 "Kill " + Chekker + " with gear \nworth under " +
                         (int) Math.floor(Math.random() * (50 - 15 + 1) + 15)
                         + "M"
         };
-        pvmg = new String[]{
+        pvmg = new String[] {
                 "Kill " + Chekker + " " +
                         (int) Math.floor(Math.random() * (10 - 5 + 1) + 5) + " times",
                 "Get any unique from " + Chekker + "!",
@@ -320,7 +369,8 @@ public class BoredPanel extends PluginPanel {
 
         remove(wikiButton);
     }
-    private void checkThatShit() {
+    private void checkThatShit()
+    {
         index = random.nextInt(3);
         skills();
         pk();
@@ -329,226 +379,267 @@ public class BoredPanel extends PluginPanel {
 
         add(Image);
         add(wikiButton);
-        add(button, BorderLayout.SOUTH);
+        add(generate, BorderLayout.SOUTH);
     }
 
-    public void skillCheckTask() {
-        if (Chekker.equals("Fishing")) {
+    private int randomInt(int min, int max)
+    {
+        int randomNum = (int) Math.floor(Math.random() * (max - min + 1) + min);
+        return randomNum;
+    }
+
+    public void skillCheckTask()
+    {
+        if (Chekker.equals("Fishing"))
+        {
+            randomNumber = randomInt(100, 200);
             xp = client.getSkillExperience(Skill.FISHING);
             skillTask = SkillCheck.fishing();
-            skilT = new String[]{
-                    "Fish " + (int) Math.floor(Math.random() * (200 - 100 + 1) + 100) + " " + skillTask + "!"
-            };
-        } else if (Chekker.equals("Prayer")) {
+            skilT = "Fish " + randomNumber + " " + skillTask + "!";
+        }
+        else if (Chekker.equals("Prayer"))
+        {
+            randomNumber = randomInt(200, 300);
             xp = client.getSkillExperience(Skill.PRAYER);
             String[] altar = {"Gilded Altar", "Chaos Altar"};
             Random random = new Random();
             int randint = random.nextInt(2);
             skillTask = SkillCheck.prayer();
-            skilT = new String[]{
-                    "Sacrifice " + (int) Math.floor(Math.random() * (300 - 200 + 1) + 200) + " " + skillTask + "\nto the " + altar[randint] + "!"
-            };
-        } else if (Chekker.equals("Runecrafting")) {
+            skilT = "Sacrifice " + randomNumber + " " + skillTask + "\nto the " + altar[randint] + "!";
+        }
+        else if (Chekker.equals("Runecrafting"))
+        {
+            randomNumber = randomInt(600, 800);
             xp = client.getSkillExperience(Skill.RUNECRAFT);
             skillTask = SkillCheck.runecrafting();
             if (skillTask.equals("Ourania Altar")) {
-                skilT = new String[]{
-                        "Craft " + (int) Math.floor(Math.random() * (800 - 600 + 1) + 600) + " runes at the \n" + skillTask + "!"
-                };
+                skilT = "Craft " + randomNumber + " runes at the \n" + skillTask + "!";
             } else {
-                skilT = new String[]{
-                        "Craft " + (int) Math.floor(Math.random() * (800 - 600 + 1) + 600) + " " + skillTask + "!"
-                };
+                skilT = "Craft " + randomNumber + " " + skillTask + "!";
+
             }
-        } else if (Chekker.equals("Smithing")) {
+        }
+        else if (Chekker.equals("Smithing"))
+        {
+            randomNumber = randomInt(400,600);
             xp = client.getSkillExperience(Skill.SMITHING);
             skillTask = SkillCheck.smithing();
             if (skillTask.equals("Just do the knights sword quest cmonn!")) {
-                skilT = new String[]{
-                        "Just do the knights sword quest cmonn!"
-                };
+                skilT = "Just do the knights sword quest cmonn!";
             } else {
-                skilT = new String[]{
-                        "Smith\n" + (int) Math.floor(Math.random() * (600 - 400 + 1) + 400) + " " + skillTask + "!"
-                };
-            }
-        } else if (Chekker.equals("Mining")) {
-            xp = client.getSkillExperience(Skill.MINING);
-            skillTask = SkillCheck.mining();
-            if (skillTask.equals("Motherlode Mine")) {
-                skilT = new String[]{
-                        "Mine " + (int) Math.floor(Math.random() * (200 - 120 + 1) + 120) + " pay dirt\nin the " + skillTask + "!"
-                };
-            } else if(skillTask.equals("Volcanic Mine")) {
-                skilT = new String[]{
-                        "Do " + (int) Math.floor(Math.random() * (20 - 10 + 1) + 10) + " " + skillTask + "rounds!"
-                };
-            } else {
-                skilT = new String[]{
-                        "Mine " + (int) Math.floor(Math.random() * (200 - 120 + 1) + 120) + " " + skillTask + "!"
-                };
-            }
-        } else if (Chekker.equals("Agility")) {
-            xp = client.getSkillExperience(Skill.AGILITY);
-            skillTask = SkillCheck.agility();
-            skilT = new String[]{
-                    "Complete " + (int) Math.floor(Math.random() * (50 - 15 + 1) + 15) + " laps of the\n" + skillTask + "!"
-            };
-        } else if (Chekker.equals("Hunter")) {
-            xp = client.getSkillExperience(Skill.HUNTER);
-            skillTask = SkillCheck.hunter();
-            skilT = new String[]{
-                    "Hunt " + (int) Math.floor(Math.random() * (300 - 200 + 1) + 200) + " " + skillTask + "!"
-            };
-        } else if (Chekker.equals("Construction")) {
-            xp = client.getSkillExperience(Skill.CONSTRUCTION);
-            skillTask = SkillCheck.construction();
-            skilT = new String[]{
-                    "Build " + (int) Math.floor(Math.random() * (200 - 100 + 1) + 100) + " " + skillTask + "!"
-            };
-        } else if (Chekker.equals("Herblore")) {
-            xp = client.getSkillExperience(Skill.HERBLORE);
-            skillTask = SkillCheck.herblore();
-            skilT = new String[]{
-                    "Make " + (int) Math.floor(Math.random() * (600 - 300 + 1) + 500) + " " + skillTask + "!"
-            };
-        } else if (Chekker.equals("Woodcutting")) {
-            xp = client.getSkillExperience(Skill.WOODCUTTING);
-            skillTask = SkillCheck.woodcutting();
-            skilT = new String[]{
-                    "Chop " + (int) Math.floor(Math.random() * (200 - 100 + 1) + 100) + " " + skillTask + " logs!"
-            };
-        } else if (Chekker.equals("Crafting")) {
-            xp = client.getSkillExperience(Skill.CRAFTING);
-            skillTask = SkillCheck.crafting();
-            skilT = new String[]{
-                    "Craft " + (int) Math.floor(Math.random() * (200 - 100 + 1) + 100) + " " + skillTask + "!"
-            };
-        } else if (Chekker.equals("Cooking")) {
-            xp = client.getSkillExperience(Skill.COOKING);
-            skillTask = SkillCheck.cooking();
-            skilT = new String[]{
-                    "Cook " + (int) Math.floor(Math.random() * (300 - 100 + 1) + 100) + " " + skillTask + "!"
-            };
-        } else if (Chekker.equals("Thieving")) {
-            xp = client.getSkillExperience(Skill.THIEVING);
-            skillTask = SkillCheck.theiving();
-            skilT = new String[]{
-                    "Thief " + skillTask + " " + (int) Math.floor(Math.random() * (200 - 100 + 1) + 200) + " times!"
-            };
-        } else if (Chekker.equals("Fletching")) {
-            xp = client.getSkillExperience(Skill.FLETCHING);
-            skillTask = SkillCheck.fletching();
-            skilT = new String[]{
-                    "Fletch " + skillTask + " " + (int) Math.floor(Math.random() * (300 - 200 + 1) + 200) + " times!"
-            };
-        } else if (Chekker.equals("Firemaking")) {
-            xp = client.getSkillExperience(Skill.FIREMAKING);
-            skillTask = SkillCheck.firemaking();
-            if (skillTask.equals("Wintertodt")) {
-                skilT = new String[]{
-                        "Do " + (int) Math.floor(Math.random() * (25 - 10 + 1) + 10) + " " + skillTask + " rounds!"
-                };
-            } else {
-                skilT = new String[]{
-                        "Burn " + (int) Math.floor(Math.random() * (200 - 50 + 1) + 50) + " " + skillTask + " logs!"
-                };
+                skilT = "Smith\n" + randomNumber + " " + skillTask + "!";
             }
         }
-    }
-    private void skills() {
-        remove(Image);
-        if (Chekker.equals("Agility")) {
+        else if (Chekker.equals("Mining"))
+        {
+            randomNumber = randomInt(120, 200);
+            xp = client.getSkillExperience(Skill.MINING);
+            skillTask = SkillCheck.mining();
 
+
+            if (skillTask.equals("Motherlode Mine"))
+            {
+                skilT = "Mine " + randomNumber + " pay dirt\nin the " + skillTask + "!";
+            }
+            else if(skillTask.equals("Volcanic Mine"))
+            {
+                randomNumber = randomInt(120, 200);
+                skilT =  "Do " + randomNumber + " " + skillTask + "rounds!";
+            }
+            else
+            {
+                skilT = "Mine " + randomNumber + " " + skillTask + "!";
+            }
+        }
+        else if (Chekker.equals("Agility"))
+        {
+            randomNumber = randomInt(15, 50);
+            xp = client.getSkillExperience(Skill.AGILITY);
+            skillTask = SkillCheck.agility();
+            skilT = "Complete " + randomNumber + " laps of the\n" + skillTask + "!";
+        }
+        else if (Chekker.equals("Hunter"))
+        {
+            randomNumber = randomInt(200, 300);
+            xp = client.getSkillExperience(Skill.HUNTER);
+            skillTask = SkillCheck.hunter();
+            skilT = "Hunt " + randomNumber + " " + skillTask + "!";
+        }
+        else if (Chekker.equals("Construction"))
+        {
+            randomNumber = randomInt(100, 200);
+            xp = client.getSkillExperience(Skill.CONSTRUCTION);
+            skillTask = SkillCheck.construction();
+            skilT = "Build " + randomNumber + " " + skillTask + "!";
+        }
+        else if (Chekker.equals("Herblore"))
+        {
+            randomNumber = randomInt(300, 600);
+            xp = client.getSkillExperience(Skill.HERBLORE);
+            skillTask = SkillCheck.herblore();
+            skilT = "Make " + randomNumber + " " + skillTask + "!";
+        }
+        else if (Chekker.equals("Woodcutting"))
+        {
+            randomNumber = randomInt(100, 200);
+            xp = client.getSkillExperience(Skill.WOODCUTTING);
+            skillTask = SkillCheck.woodcutting();
+            skilT = "Chop " + randomNumber + " " + skillTask + "!";
+        }
+        else if (Chekker.equals("Crafting"))
+        {
+            randomNumber = randomInt(100, 200);
+            xp = client.getSkillExperience(Skill.CRAFTING);
+            skillTask = SkillCheck.crafting();
+            skilT = "Craft " + randomNumber + " " + skillTask + "!";
+        }
+        else if (Chekker.equals("Cooking"))
+        {
+            randomNumber = randomInt(100, 300);
+            xp = client.getSkillExperience(Skill.COOKING);
+            skillTask = SkillCheck.cooking();
+            skilT = "Cook " + randomNumber + " " + skillTask + "!";
+        }
+        else if (Chekker.equals("Thieving"))
+        {
+            randomNumber = randomInt(100, 200);
+            xp = client.getSkillExperience(Skill.THIEVING);
+            skillTask = SkillCheck.theiving();
+            skilT = "Thief " + skillTask + " " + randomNumber + " times!";
+        }
+        else if (Chekker.equals("Fletching")) {
+
+            randomNumber = randomInt(200, 300);
+            xp = client.getSkillExperience(Skill.FLETCHING);
+            skillTask = SkillCheck.fletching();
+            skilT =  "Fletch " + skillTask + " " + randomNumber + " times!";
+        }
+        else if (Chekker.equals("Firemaking"))
+        {
+            xp = client.getSkillExperience(Skill.FIREMAKING);
+            skillTask = SkillCheck.firemaking();
+
+            if (skillTask.equals("Wintertodt"))
+            {
+                randomNumber = randomInt(3, 10);
+                skilT = "Do " + randomNumber + " " + skillTask + " rounds!";
+            }
+            else
+            {
+                randomNumber = randomInt(50, 200);
+                skilT = "Burn " + randomNumber + " " + skillTask + " logs!";
+            }
+        }
+        BoredPlugin.skillValue = skillTask;
+    }
+    private void skills()
+    {
+        remove(Image);
+        if (Chekker.equals("Agility"))
+        {
             img = ImageUtil.loadImageResource(BoredPlugin.class, "/Agility.png");
             Image = new JLabel(new ImageIcon(img));
-            explain.setText(skilT[0]);
+            explain.setText(skilT);
             url = "https://oldschool.runescape.wiki/w/Agility";
-        }  else if (Chekker.equals("Runecrafting")) {
-
+        }
+        else if (Chekker.equals("Runecrafting"))
+        {
             img = ImageUtil.loadImageResource(BoredPlugin.class, "/Runecraft.png");
             Image = new JLabel(new ImageIcon(img));
-            explain.setText(skilT[0]);
+            explain.setText(skilT);
             url = "https://oldschool.runescape.wiki/w/Runecraft";
-        } else if (Chekker.equals("Smithing")) {
-
+        }
+        else if (Chekker.equals("Smithing"))
+        {
             img = ImageUtil.loadImageResource(BoredPlugin.class, "/Smithing.png");
             Image = new JLabel(new ImageIcon(img));
-            explain.setText(skilT[0]);
+            explain.setText(skilT);
             url = "https://oldschool.runescape.wiki/w/Smithing";
-        } else if (Chekker.equals("Prayer")) {
-
+        }
+        else if (Chekker.equals("Prayer"))
+        {
             img = ImageUtil.loadImageResource(BoredPlugin.class, "/Prayer.png");
             Image = new JLabel(new ImageIcon(img));
-            explain.setText(skilT[0]);
+            explain.setText(skilT);
             url = "https://oldschool.runescape.wiki/w/Prayer";
-        } else if (Chekker.equals("Mining")) {
-
+        }
+        else if (Chekker.equals("Mining"))
+        {
             img = ImageUtil.loadImageResource(BoredPlugin.class, "/Mining.png");
             Image = new JLabel(new ImageIcon(img));
-            explain.setText(skilT[0]);
+            explain.setText(skilT);
             url = "https://oldschool.runescape.wiki/w/Mining";
-        } else if (Chekker.equals("Hunter")) {
-
+        }
+        else if (Chekker.equals("Hunter"))
+        {
             img = ImageUtil.loadImageResource(BoredPlugin.class, "/Hunter.png");
             Image = new JLabel(new ImageIcon(img));
-            explain.setText(skilT[0]);
+            explain.setText(skilT);
             url = "https://oldschool.runescape.wiki/w/Hunter";
-        } else if (Chekker.equals("Construction")) {
-
+        }
+        else if (Chekker.equals("Construction"))
+        {
             img = ImageUtil.loadImageResource(BoredPlugin.class, "/Construction.png");
             Image = new JLabel(new ImageIcon(img));
-            explain.setText(skilT[0]);
+            explain.setText(skilT);
             url = "https://oldschool.runescape.wiki/w/Construction";
-        } else if (Chekker.equals("Cooking")) {
-
+        }
+        else if (Chekker.equals("Cooking"))
+        {
             img = ImageUtil.loadImageResource(BoredPlugin.class, "/Cooking.png");
             Image = new JLabel(new ImageIcon(img));
-            explain.setText(skilT[0]);
+            explain.setText(skilT);
             url = "https://oldschool.runescape.wiki/w/Cooking";
-        } else if (Chekker.equals("Herblore")) {
-
+        }
+        else if (Chekker.equals("Herblore"))
+        {
             img = ImageUtil.loadImageResource(BoredPlugin.class, "/Herblore.png");
             Image = new JLabel(new ImageIcon(img));
-            explain.setText(skilT[0]);
+            explain.setText(skilT);
             url = "https://oldschool.runescape.wiki/w/Herblore";
-        } else if (Chekker.equals("Fletching")) {
-
+        }
+        else if (Chekker.equals("Fletching"))
+        {
             img = ImageUtil.loadImageResource(BoredPlugin.class, "/Fletching.png");
             Image = new JLabel(new ImageIcon(img));
-            explain.setText(skilT[0]);
+            explain.setText(skilT);
             url = "https://oldschool.runescape.wiki/w/Fletching";
-        } else if (Chekker.equals("Fishing")) {
-
+        }
+        else if (Chekker.equals("Fishing"))
+        {
             img = ImageUtil.loadImageResource(BoredPlugin.class, "/Fishing.png");
             Image = new JLabel(new ImageIcon(img));
-            explain.setText(skilT[0]);
+            explain.setText(skilT);
             url = "https://oldschool.runescape.wiki/w/Fishing";
 
-        } else if (Chekker.equals("Woodcutting")) {
-
+        }
+        else if (Chekker.equals("Woodcutting"))
+        {
             img = ImageUtil.loadImageResource(BoredPlugin.class, "/Woodcutting.png");
             Image = new JLabel(new ImageIcon(img));
-            explain.setText(skilT[0]);
+            explain.setText(skilT);
             url = "https://oldschool.runescape.wiki/w/Woodcutting";
 
-        } else if (Chekker.equals("Thieving")) {
-
+        }
+        else if (Chekker.equals("Thieving"))
+        {
             img = ImageUtil.loadImageResource(BoredPlugin.class, "/Thieving.png");
             Image = new JLabel(new ImageIcon(img));
-            explain.setText(skilT[0]);
+            explain.setText(skilT);
             url = "https://oldschool.runescape.wiki/w/Thieving";
-        } else if (Chekker.equals("Firemaking")) {
-
+        }
+        else if (Chekker.equals("Firemaking"))
+        {
             img = ImageUtil.loadImageResource(BoredPlugin.class, "/Firemaking.png");
             Image = new JLabel(new ImageIcon(img));
-            explain.setText(skilT[0]);
+            explain.setText(skilT);
             url = "https://oldschool.runescape.wiki/w/Firemaking";
-        } else if (Chekker.equals("Crafting")) {
-
+        }
+        else if (Chekker.equals("Crafting"))
+        {
             img = ImageUtil.loadImageResource(BoredPlugin.class, "/Crafting.png");
             Image = new JLabel(new ImageIcon(img));
-            explain.setText(skilT[0]);
+            explain.setText(skilT);
             url = "https://oldschool.runescape.wiki/w/Crafting";
         }
     }
@@ -581,94 +672,94 @@ public class BoredPanel extends PluginPanel {
 
             img = ImageUtil.loadImageResource(BoredPlugin.class, "/Agility.png");
             Image = new JLabel(new ImageIcon(img));
-            explain.setText(skilT[0]);
+            explain.setText(skilT);
             url = "https://oldschool.runescape.wiki/w/Agility";
         }
         else if (Chekker.equals("Runecrafting")) {
 
             img = ImageUtil.loadImageResource(BoredPlugin.class, "/Runecraft.png");
             Image = new JLabel(new ImageIcon(img));
-            explain.setText(skilT[0]);
+            explain.setText(skilT);
             url = "https://oldschool.runescape.wiki/w/Runecraft";
         } else if (Chekker.equals("Smithing")) {
 
             img = ImageUtil.loadImageResource(BoredPlugin.class, "/Smithing.png");
             Image = new JLabel(new ImageIcon(img));
-            explain.setText(skilT[0]);
+            explain.setText(skilT);
             url = "https://oldschool.runescape.wiki/w/Smithing";
         } else if (Chekker.equals("Prayer")) {
 
             img = ImageUtil.loadImageResource(BoredPlugin.class, "/Prayer.png");
             Image = new JLabel(new ImageIcon(img));
-            explain.setText(skilT[0]);
+            explain.setText(skilT);
             url = "https://oldschool.runescape.wiki/w/Prayer";
         } else if (Chekker.equals("Mining")) {
 
             img = ImageUtil.loadImageResource(BoredPlugin.class, "/Mining.png");
             Image = new JLabel(new ImageIcon(img));
-            explain.setText(skilT[0]);
+            explain.setText(skilT);
             url = "https://oldschool.runescape.wiki/w/Mining";
         } else if (Chekker.equals("Hunter")) {
 
             img = ImageUtil.loadImageResource(BoredPlugin.class, "/Hunter.png");
             Image = new JLabel(new ImageIcon(img));
-            explain.setText(skilT[0]);
+            explain.setText(skilT);
             url = "https://oldschool.runescape.wiki/w/Hunter";
         } else if (Chekker.equals("Construction")) {
 
             img = ImageUtil.loadImageResource(BoredPlugin.class, "/Construction.png");
             Image = new JLabel(new ImageIcon(img));
-            explain.setText(skilT[0]);
+            explain.setText(skilT);
             url = "https://oldschool.runescape.wiki/w/Construction";
         } else if (Chekker.equals("Cooking")) {
 
             img = ImageUtil.loadImageResource(BoredPlugin.class, "/Cooking.png");
             Image = new JLabel(new ImageIcon(img));
-            explain.setText(skilT[0]);
+            explain.setText(skilT);
             url = "https://oldschool.runescape.wiki/w/Cooking";
         } else if (Chekker.equals("Herblore")) {
 
             img = ImageUtil.loadImageResource(BoredPlugin.class, "/Herblore.png");
             Image = new JLabel(new ImageIcon(img));
-            explain.setText(skilT[0]);
+            explain.setText(skilT);
             url = "https://oldschool.runescape.wiki/w/Herblore";
         } else if (Chekker.equals("Fletching")) {
 
             img = ImageUtil.loadImageResource(BoredPlugin.class, "/Fletching.png");
             Image = new JLabel(new ImageIcon(img));
-            explain.setText(skilT[0]);
+            explain.setText(skilT);
             url = "https://oldschool.runescape.wiki/w/Fletching";
         } else if (Chekker.equals("Fishing")) {
 
             img = ImageUtil.loadImageResource(BoredPlugin.class, "/Fishing.png");
             Image = new JLabel(new ImageIcon(img));
-            explain.setText(skilT[0]);
+            explain.setText(skilT);
             url = "https://oldschool.runescape.wiki/w/Fishing";
 
         } else if (Chekker.equals("Woodcutting")) {
 
             img = ImageUtil.loadImageResource(BoredPlugin.class, "/Woodcutting.png");
             Image = new JLabel(new ImageIcon(img));
-            explain.setText(skilT[0]);
+            explain.setText(skilT);
             url = "https://oldschool.runescape.wiki/w/Woodcutting";
 
         } else if (Chekker.equals("Thieving")) {
 
             img = ImageUtil.loadImageResource(BoredPlugin.class, "/Thieving.png");
             Image = new JLabel(new ImageIcon(img));
-            explain.setText(skilT[0]);
+            explain.setText(skilT);
             url = "https://oldschool.runescape.wiki/w/Thieving";
         } else if (Chekker.equals("Firemaking")) {
 
             img = ImageUtil.loadImageResource(BoredPlugin.class, "/Firemaking.png");
             Image = new JLabel(new ImageIcon(img));
-            explain.setText(skilT[0]);
+            explain.setText(skilT);
             url = "https://oldschool.runescape.wiki/w/Firemaking";
         } else if (Chekker.equals("Crafting")) {
 
             img = ImageUtil.loadImageResource(BoredPlugin.class, "/Crafting.png");
             Image = new JLabel(new ImageIcon(img));
-            explain.setText(skilT[0]);
+            explain.setText(skilT);
             url = "https://oldschool.runescape.wiki/w/Crafting";
         } else if (Chekker.equals("Corrupted Gauntlet")) {
             img = ImageUtil.loadImageResource(BoredPlugin.class, "/CG.png");
@@ -678,43 +769,42 @@ public class BoredPanel extends PluginPanel {
         }
     }
     private void pvmCheck() {
-        if(Chekker.equals("Crazy archaeologist")) {
+        if (Chekker.equals("Crazy archaeologist")) {
             img = ImageUtil.loadImageResource(BoredPlugin.class, "/Crazy archaeologist.png");
             Image = new JLabel(new ImageIcon(img));
             explain.setText(pvmTasks[index]);
             url = "https://oldschool.runescape.wiki/w/Crazy_archaeologist";
-        } else if(Chekker.equals("King Black Dragon")) {
+        } else if (Chekker.equals("King Black Dragon")) {
             img = ImageUtil.loadImageResource(BoredPlugin.class, "/King Black Dragon.png");
             Image = new JLabel(new ImageIcon(img));
             explain.setText(pvmTasks[index]);
             url = "https://oldschool.runescape.wiki/w/King_Black_Dragon";
-        } else if(Chekker.equals("Obor")) {
+        } else if (Chekker.equals("Obor")) {
             img = ImageUtil.loadImageResource(BoredPlugin.class, "/Obor.png");
             Image = new JLabel(new ImageIcon(img));
             explain.setText(pvmTasks[index]);
             url = "https://oldschool.runescape.wiki/w/Obor";
-        } else if(Chekker.equals("Venenatis")) {
+        } else if (Chekker.equals("Venenatis")) {
             img = ImageUtil.loadImageResource(BoredPlugin.class, "/Venenatis.png");
             Image = new JLabel(new ImageIcon(img));
             explain.setText(pvmTasks[index]);
             url = "https://oldschool.runescape.wiki/w/Venenatis";
-        } else if(Chekker.equals("Deranged archaeologist")) {
+        } else if (Chekker.equals("Deranged archaeologist")) {
             img = ImageUtil.loadImageResource(BoredPlugin.class, "/Deranged archeologist.png");
             Image = new JLabel(new ImageIcon(img));
             explain.setText(pvmTasks[index]);
             url = "https://oldschool.runescape.wiki/w/Deranged_archaeologist";
-        } else if(Chekker.equals("Mole")) {
+        } else if (Chekker.equals("Mole")) {
             img = ImageUtil.loadImageResource(BoredPlugin.class, "/Mole.png");
             Image = new JLabel(new ImageIcon(img));
             explain.setText(pvmTasks[index]);
             url = "https://oldschool.runescape.wiki/w/Giant_Mole";
-        } else if(Chekker.equals("Bryophyta")) {
+        } else if (Chekker.equals("Bryophyta")) {
             img = ImageUtil.loadImageResource(BoredPlugin.class, "/Bryophyta.png");
             Image = new JLabel(new ImageIcon(img));
             explain.setText(pvmTasks[index]);
             url = "https://oldschool.runescape.wiki/w/Bryophyta";
-        }
-        else if (Chekker.equals(("Gauntlet"))) {
+        } else if (Chekker.equals(("Gauntlet"))) {
             img = ImageUtil.loadImageResource(BoredPlugin.class, "/G.png");
             Image = new JLabel(new ImageIcon(img));
             explain.setText(pvmg[index]);
@@ -797,6 +887,4 @@ public class BoredPanel extends PluginPanel {
             url = "https://oldschool.runescape.wiki/w/Barrows";
         }
     }
-
-
 }

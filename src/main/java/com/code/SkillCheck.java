@@ -1,3 +1,27 @@
+/*
+ * Copyright (c) 2021, MakingStan
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ *
+ * 1. Redistributions of source code must retain the above copyright notice, this
+ *    list of conditions and the following disclaimer.
+ * 2. Redistributions in binary form must reproduce the above copyright notice,
+ *    this list of conditions and the following disclaimer in the documentation
+ *    and/or other materials provided with the distribution.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+ * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR
+ * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+ * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ */
 package com.code;
 
 public class SkillCheck {
@@ -11,21 +35,17 @@ public class SkillCheck {
         xp = BoredPanel.xp;
 
         if (xp > lvls[9]) {
-            skillTask = "Redwoods";
-        } else if (xp > lvls[8]) {
-            skillTask = "Magic";
+            skillTask = "Redwoods logs";
         } else if (xp > 1_210_421) {
-            skillTask = "Magic";
+            skillTask = "Magic logs";
         } else if (xp > 22_406) {
-            skillTask = "Teak";
+            skillTask = "Teak logs";
         } else if (xp > lvls[3]) {
-            skillTask = "Willow";
-        } else if (xp > lvls[2]) {
-            skillTask = "Oak";
-        } else if (xp > lvls[1]) {
-            skillTask = "Normal/Oak";
+            skillTask = "Willow logs";
+        } else if (xp > 2_411) {
+            skillTask = "Oak logs";
         } else {
-            skillTask = "Normal";
+            skillTask = "Normal logs";
         }
         return skillTask;
     }
@@ -33,18 +53,12 @@ public class SkillCheck {
     public static String firemaking() {
         xp = BoredPanel.xp;
 
-        if (xp > lvls[9]) {
+        if (xp > lvls[5]) {
             skillTask = "Wintertodt";
-        } else if (xp > lvls[4]) {
-            skillTask = "Willow";
         } else if (xp > lvls[3]) {
             skillTask = "Willow";
-        } else if (xp > lvls[2]) {
+        }  else if (xp > 2_411) {
             skillTask = "Oak";
-        } else if (xp > 2_411) {
-            skillTask = "Oak";
-        } else if (xp > lvls[1]) {
-            skillTask = "Normal";
         } else {
             skillTask = "Normal";
         }
@@ -59,8 +73,6 @@ public class SkillCheck {
             skillTask = "Ardougne Rooftop Course";
         } else if (xp > lvls[8]) {
             skillTask = "Rellekka Rooftop Course";
-        } else if (xp > lvls[7]) {
-            skillTask = "Seers' Village Rooftop Course";
         } else if (xp > lvls[6]) {
             skillTask = "Seers' Village Rooftop Course";
         } else if (xp > lvls[5]) {
@@ -82,7 +94,7 @@ public class SkillCheck {
     public static String theiving() {
         xp = BoredPanel.xp;
         if (xp > 166_636) {
-            skillTask = " Knights of Ardougne";
+            skillTask = "Knights of Ardougne";
         } else if (xp > 7_842) {
             skillTask = "Fruit stalls";
         } else if(xp > 2_411) {
@@ -94,13 +106,9 @@ public class SkillCheck {
     }
     public static String cooking() {
         xp = BoredPanel.xp;
-        if (xp > 5_902_831) {
-            skillTask = "Raw Manta ray";
-        }
-        else if (xp > 2_951_373 ) {
+        if (xp > 2_951_373 ) {
             skillTask = "Raw Anglers";
-        }
-        else if (xp > lvls[8]) {
+        } else if (xp > lvls[8]) {
             skillTask = "Raw Sharks";
         } else if (xp > 22_406) {
             skillTask = "Raw karambwans";
@@ -112,19 +120,15 @@ public class SkillCheck {
             skillTask = "Raw Sardines";
         }
         return skillTask;
-    };
+    }
     public static String crafting() {
         xp = BoredPanel.xp;
         if (xp > 496_254) {
             skillTask = "Air Battlestaves";
         } else if (xp > 368_599) {
             skillTask = "Green Dragonhide Bodies";
-        } else if (xp > 224_466) {
-            skillTask = "Earth Battlestaves";
         } else if (xp > 150_872) {
             skillTask = "Water Battlestaves";
-        } else if (xp > 22_406) {
-            skillTask = "Raw karambwans";
         } else if (xp > 9_730) {
             skillTask = "Emeralds";
         } else if (xp > lvls[2]) {
@@ -133,7 +137,7 @@ public class SkillCheck {
             skillTask = "Opals";
         }
         return skillTask;
-    };
+    }
     public static String fishing() {
         xp = BoredPanel.xp;
         if (xp > 224_466) {
@@ -144,7 +148,7 @@ public class SkillCheck {
             skillTask = "Shrimp/Anchovy";
         }
         return skillTask;
-    };
+    }
     public static String herblore() {
         xp = BoredPanel.xp;
         if (xp > lvls[9]) {
@@ -158,7 +162,7 @@ public class SkillCheck {
             skillTask = "Attack Potions";
         }
         return skillTask;
-    };
+    }
     public static String fletching() {
         xp = BoredPanel.xp;
         if (xp > 3_258_594) {
@@ -172,7 +176,7 @@ public class SkillCheck {
             skillTask = "Iron darts";
         }
         return skillTask;
-    };
+    }
     public static String construction() {
         xp = BoredPanel.xp;
         if (xp > 1_096_278) {
@@ -189,7 +193,7 @@ public class SkillCheck {
             skillTask = "Crude wooden chairs";
         }
         return skillTask;
-    };
+    }
     public static String hunter() {
         xp = BoredPanel.xp;
         if(xp > 992_895) {
@@ -212,7 +216,7 @@ public class SkillCheck {
             skillTask = "Polar Kebbits";
         }
         return skillTask;
-    };
+    }
     public static String mining() {
         xp = BoredPanel.xp;
         if (xp > 737_627) {
@@ -225,7 +229,7 @@ public class SkillCheck {
             skillTask = "Copper/Tin ore";
         }
         return skillTask;
-    };
+    }
     public static String smithing() {
         xp = BoredPanel.xp;
         if (xp > 37_224) {
@@ -238,12 +242,12 @@ public class SkillCheck {
             skillTask = "Just do the knights sword quest cmonn!";
         }
         return skillTask;
-    };
+    }
     public static String prayer() {
         xp = BoredPanel.xp;
             skillTask = "Dragon bones";
         return skillTask;
-    };
+    }
     public static String runecrafting() {
         xp = BoredPanel.xp;
         if (xp > lvls[9]) {
@@ -254,7 +258,7 @@ public class SkillCheck {
             skillTask = "Ourania Altar";
         }
         return skillTask;
-    };
+    }
 
 
 

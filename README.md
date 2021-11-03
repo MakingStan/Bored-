@@ -1,4 +1,6 @@
-# BoredGenerator
+#Skills Generator
+
+(previously boredgenerator)
 
 This is a plugin to use when your bored.
 note; you have to be logged in to use this plugin.
@@ -31,7 +33,7 @@ instagram: https://www.instagram.com/tompan/
 
 **How to use**
 
-When downloading the plugin you will see a little button with a bandos head on it. Click it.
+When downloading the plugin you will see a little button with a skills icon with a weel on it. Click it.
 
 Then you will see a menu, here you can check the checkboxes that you feel like doing. 
 
@@ -43,3 +45,10 @@ When you have your task completed you can click the completed button and then yo
 
 When you have completed a task you can generate a new one!
 
+**Potential future updates**
+
+A shop where you can spend all of your points.
+
+**Overlay**
+
+![](../../Desktop/Schermafbeelding 2021-11-03 om 14.23.56.png)
