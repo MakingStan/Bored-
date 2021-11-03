@@ -54,9 +54,9 @@ import java.awt.image.BufferedImage;
 
 @Slf4j
 @PluginDescriptor(
-	name = "Skills generator",
-	description = "A plug-in that gives you tasks to do. An excellent plug-in when you have nothing to do.",
-	tags = {"whattodo", "idk", "bored","Generator","generator","skills","boredom", "SKILLING", "PVM","PKING","training","tasks"}
+		name = "Skills generator",
+		description = "A plug-in that gives you tasks to do. An excellent plug-in when you have nothing to do.",
+		tags = {"whattodo", "idk", "bored","Generator","generator","skills","boredom", "SKILLING", "PVM","PKING","training","tasks"}
 )
 public class  BoredPlugin extends Plugin {
 	public static Image ICON;
@@ -146,7 +146,7 @@ public class  BoredPlugin extends Plugin {
 	@Subscribe
 	private void onGameTick(GameTick tick)
 	{
-		long skillExperience = client.getOverallExperience();
+		long skillExperience = client.getSkillExperience(DefineSkill.defineSkill(BoredPanel.text.getText()));
 		preXp = loginXp;
 
 		if (loginXp != 0 && (skillExperience - preXp <= 0))
@@ -161,7 +161,7 @@ public class  BoredPlugin extends Plugin {
 		}
 		else
 		{
-			loginXp = client.getOverallExperience();
+			loginXp = client.getSkillExperience(DefineSkill.defineSkill(BoredPanel.text.getText()));
 		}
 		skillValue = BoredPanel.skillTask;
 
@@ -177,7 +177,7 @@ public class  BoredPlugin extends Plugin {
 			toGo = BoredPanel.randomNumber-counter;
 			BoredPanel.explain.setText(preTxt+"\n(you only have "+toGo+" to go!)");
 		}
-		else if(skillValue != null && SkillMap.skillMap.get(skillValue) != client.getOverallExperience())
+		else if(skillValue != null && SkillMap.skillMap.get(skillValue) != client.getSkillExperience(DefineSkill.defineSkill(BoredPanel.text.getText())))
 		{
 			if(skillValue.equalsIgnoreCase("Wintertodt"))
 			{
@@ -205,13 +205,15 @@ public class  BoredPlugin extends Plugin {
 	}
 
 
+
+
 	@Subscribe
 	public void onGameStateChanged(GameStateChanged event) throws Exception
 	{
 		switch (event.getGameState())
 		{
 			case LOGGED_IN:
-				loginXp = client.getOverallExperience();
+				loginXp = client.getSkillExperience(DefineSkill.defineSkill(BoredPanel.text.getText()));
 				startUp();
 
 			case HOPPING:
@@ -226,8 +228,15 @@ public class  BoredPlugin extends Plugin {
 
 	private void checkHalfXp()
 	{
+		if(skillValue.equalsIgnoreCase("Copper/Tin ore") || skillValue.equalsIgnoreCase("Trout/Salmon")) {
+			System.out.println("trout and salmon");
+			counter++;
+
+			toGo = BoredPanel.randomNumber-counter;
+			BoredPanel.explain.setText(preTxt+"\n(you only have "+toGo+" to go!)");
+		}
 		//no duplicate values in hashmaps allowed
-		if(skillValue.equalsIgnoreCase("Copper/Tin ore") || skillValue.equalsIgnoreCase("Oak logs") || skillValue.equalsIgnoreCase("Willow logs") || skillValue.equalsIgnoreCase("Fruit stalls") || skillValue.equalsIgnoreCase("Air Battlestaves") || skillValue.equalsIgnoreCase("Trout/Salmon") || skillValue.equalsIgnoreCase("Super Restore") || skillValue.equalsIgnoreCase("Prayer Potions") || skillValue.equalsIgnoreCase("Magic long bows") || skillValue.equalsIgnoreCase("Gold bars (at the blast furnace)"))
+		if( skillValue.equalsIgnoreCase("Oak logs") || skillValue.equalsIgnoreCase("Willow logs") || skillValue.equalsIgnoreCase("Fruit stalls") || skillValue.equalsIgnoreCase("Air Battlestaves") ||  skillValue.equalsIgnoreCase("Super Restore") || skillValue.equalsIgnoreCase("Prayer Potions") || skillValue.equalsIgnoreCase("Magic long bows") || skillValue.equalsIgnoreCase("Gold bars (at the blast furnace)"))
 		{
 			counter++;
 
