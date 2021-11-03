@@ -49,6 +49,3 @@ When you have completed a task you can generate a new one!
 
 A shop where you can spend all of your points.
 
-**Overlay**
-
-![](../../Desktop/Schermafbeelding 2021-11-03 om 14.23.56.png)
