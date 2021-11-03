@@ -1,4 +1,4 @@
-#Skills Generator
+#SkillsGenerator
 
 (previously boredgenerator)
 
