@@ -32,6 +32,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
 import net.runelite.api.events.GameStateChanged;
 import net.runelite.api.events.GameTick;
+import net.runelite.api.events.StatChanged;
 import net.runelite.client.config.ConfigManager;
 import net.runelite.client.eventbus.Subscribe;
 import net.runelite.client.events.ConfigChanged;
@@ -66,6 +67,9 @@ public class  BoredPlugin extends Plugin {
 	public static long xpDrop = 0, counter = 0, toGo = BoredPanel.randomNumber;
 	public static String skillValue = BoredPanel.skillTask;
 	public static String preTxt;
+
+
+	private static GameStateChanged gameState;
 
 	@Inject
 	public Client client;
@@ -165,37 +169,39 @@ public class  BoredPlugin extends Plugin {
 		}
 		skillValue = BoredPanel.skillTask;
 
-		System.out.println("xp drop : "+xpDrop);
-		System.out.println("skillvalue = "+skillValue);
-		System.out.println(SkillMap.skillMap.get(skillValue));
+		System.out.println("prexp "+preXp+"\nloginxp :"+loginXp);
 
-		if(skillValue != null && xpDrop == SkillMap.skillMap.get(skillValue))
-		{
-			counter++;
 
-			//no dynamic string implementation so i did this
-			toGo = BoredPanel.randomNumber-counter;
-			BoredPanel.explain.setText(preTxt+"\n(you only have "+toGo+" to go!)");
-		}
-		else if(skillValue != null && SkillMap.skillMap.get(skillValue) != client.getSkillExperience(DefineSkill.defineSkill(BoredPanel.text.getText())))
+		if(preXp >=loginXp ||preXp == -1)
 		{
-			if(skillValue.equalsIgnoreCase("Wintertodt"))
+			if(skillValue != null && xpDrop == SkillMap.skillMap.get(skillValue))
 			{
-				int winterTodtXp = 5000;
-				for(int i = 0; i < 50; i++)
-				{
-					winterTodtXp += 100;
-					if(xpDrop == winterTodtXp)
-					{
-						counter++;
+				counter++;
 
-						toGo = BoredPanel.randomNumber-counter;
-						BoredPanel.explain.setText(preTxt+"\n(you only have "+toGo+" to go!)");
-						break;
+				//no dynamic string implementation so i did this
+				toGo = BoredPanel.randomNumber-counter;
+				BoredPanel.explain.setText(preTxt+"\n(you only have "+toGo+" to go!)");
+			}
+			else if(skillValue != null && SkillMap.skillMap.get(skillValue) != client.getSkillExperience(DefineSkill.defineSkill(BoredPanel.text.getText())))
+			{
+				if(skillValue.equalsIgnoreCase("Wintertodt"))
+				{
+					int winterTodtXp = 5000;
+					for(int i = 0; i < 50; i++)
+					{
+						winterTodtXp += 100;
+						if(xpDrop == winterTodtXp)
+						{
+							counter++;
+
+							toGo = BoredPanel.randomNumber-counter;
+							BoredPanel.explain.setText(preTxt+"\n(you only have "+toGo+" to go!)");
+							break;
+						}
 					}
 				}
+				checkHalfXp();
 			}
-			checkHalfXp();
 		}
 
 		if(toGo == 0)

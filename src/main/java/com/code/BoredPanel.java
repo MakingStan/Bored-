@@ -47,7 +47,7 @@ import javax.swing.*;
 @Singleton
 public class BoredPanel extends PluginPanel {
     public static int xp,randint,randomNumber = 1; //starting with 1 because it else will autocomplete the task.
-    public static JButton generate, wikiButton, completed;
+    public static JButton generate, wikiButton, completed, resetPointsButton;
     public static JTextField text;
     public JCheckBox pking, everything, pvming, skilling, prif;
     public static String Chekker, url, skillTask,skilT;
@@ -84,6 +84,7 @@ public class BoredPanel extends PluginPanel {
         points = new JTextArea("Points: 0");
         completed = new JButton("Completed");
         wikiButton = new JButton("Wiki");
+        resetPointsButton = new JButton("Reset Points");
         UserHandle.start();
 
 
@@ -121,6 +122,20 @@ public class BoredPanel extends PluginPanel {
         completed.setBackground(ColorScheme.DARKER_GRAY_COLOR);
         completed.setVisible(false);
 
+        resetPointsButton.setForeground(Color.RED);
+        resetPointsButton.setBackground(ColorScheme.DARKER_GRAY_COLOR);
+
+        resetPointsButton.addActionListener(e -> {
+            try
+            {
+                UserHandle.reset();
+            }
+            catch (IOException ex)
+            {
+                ex.printStackTrace();
+            }
+        });
+
         completed.addActionListener(e -> {
             completed();
         });
@@ -137,6 +152,7 @@ public class BoredPanel extends PluginPanel {
 
 
         add(points);
+        add(resetPointsButton);
         add(prif);
         add(everything);
         add(pking);

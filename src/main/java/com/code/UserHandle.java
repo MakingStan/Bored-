@@ -26,6 +26,7 @@ package com.code;
 
 import net.runelite.client.RuneLite;
 
+import javax.swing.*;
 import java.io.*;
 import java.util.Scanner;
 
@@ -36,15 +37,18 @@ public class UserHandle {
     public static String datas;
     public static int data = 0;
 
-    public static void handle() throws IOException {
-        if(parent.createNewFile()) {
+    public static void handle() throws IOException
+    {
+        if(parent.createNewFile())
+        {
             System.out.println("file created succesfully");
         }
         Scanner scanner = new Scanner(parent);
 
         FileReader read = new FileReader(parent);
         BufferedReader reader = new BufferedReader(read);
-        if(reader.read() == -1) {
+        if(reader.read() == -1)
+        {
             data++;
             datas = String.valueOf(data);
             System.out.println(datas);
@@ -54,7 +58,8 @@ public class UserHandle {
             buffer.close();
             BoredPanel.points.setText("Points: " + datas);
         }
-        else {
+        else
+        {
             data = scanner.nextInt();
             data++;
             datas = String.valueOf(data);
@@ -65,15 +70,20 @@ public class UserHandle {
             BoredPanel.points.setText("Points: "+datas);
 
         }
-        try {
+        try
+        {
             System.out.println(reader.read());
-        } catch (IOException ioException) {
+        }
+        catch (IOException ioException)
+        {
             ioException.printStackTrace();
         }
         reader.close();
     }
-    public static void start() throws IOException {
-        if(parent.createNewFile()) {
+    public static void start() throws IOException
+    {
+        if(parent.createNewFile())
+        {
             System.out.println("first file created");
         }
         Scanner scanner = new Scanner(parent);
@@ -81,14 +91,40 @@ public class UserHandle {
         FileReader read = new FileReader(parent);
         BufferedReader reader = new BufferedReader(read);
 
-        if(reader.read() == -1) {
+        if(reader.read() == -1)
+        {
             datas = String.valueOf(data);
         }
-        else {
+        else
+        {
             data = scanner.nextInt();
             datas = String.valueOf(data);
             BoredPanel.points.setText("Points: "+datas);
 
+        }
+    }
+
+    public static void reset() throws IOException {
+        String resetConfirm = JOptionPane.showInputDialog(null, "Do you want to reset your points?\nType \"yes\" to confirm");
+
+        if(resetConfirm != null)
+        {
+            if(resetConfirm.equalsIgnoreCase("yes"))
+            {
+                data = 0;
+                datas = String.valueOf(data);
+                BoredPanel.points.setText("Points: "+datas);
+
+                FileWriter fw = new FileWriter(parent);
+                BufferedWriter buffer = new BufferedWriter(fw);
+
+                buffer.write(datas);
+                buffer.close();
+            }
+            else
+            {
+                System.out.println("the user cancelled resetting points");
+            }
         }
     }
 }
